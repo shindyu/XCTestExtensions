@@ -158,4 +158,3 @@ class XCTAssertEventuallyTests: XCTestCase {
         XCTAssertNotNilEventually(optional)
     }
 }
-
