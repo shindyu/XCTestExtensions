@@ -1,7 +1,7 @@
 # XCTestExtensions
 `XCTestExtensions` is a Swift extension that provides ***XCTAssertEventually*** (that convenient assertions  for writing Unit Test).
 
-Use ***XCTAssertEventually***, you can write asynchronous assertions very easily and intuitively, like Nimble's toEventually.
+Use ***XCTAssertEventually***, you can write asynchronous assertions very easily and intuitively, like [Nimble](https://github.com/Quick/Nimble)'s toEventually.
 
 # Installation
 ## Installing with Carthage
