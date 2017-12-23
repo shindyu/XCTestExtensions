@@ -240,4 +240,3 @@ private func switchProcess(by result: XCTWaiter.Result, timedOutMessage: String,
         XCTFail(result.desc(), file: file, line: line)
     }
 }
-
