@@ -18,7 +18,7 @@ import XCTestExtensions
 ```
 
 
-Use `XCTestExtensions`'s extensions in your tests.
+Use `XCTestExtensions`'s extensions in your tests:
 <img src="https://raw.githubusercontent.com/shindyu/XCTestExtensions/master/img/method_completion.png">
 
 
