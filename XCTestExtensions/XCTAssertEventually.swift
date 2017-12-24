@@ -76,7 +76,8 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 /// Asynchronously, Asserts that two values are equal.
 ///
 /// - Parameters:
-///   - expression: An expression of boolean type.
+///   - expression1: An expression of type T, where T is Equatable.
+///   - expression2: An expression of type T, where T is Equatable.
 ///   - timeout: Timeout value
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
@@ -101,6 +102,15 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
     )
 }
 
+/// Asynchronously, Asserts that two arrays are equal.
+///
+/// - Parameters:
+///   - expression1: An Array expression that has the same element type as expression2.
+///   - expression2: An Array expression that has the same element type as expression1.
+///   - timeout: Timeout value
+///   - pollInterval: poll interval
+///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
+///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T], _ expression2: @escaping @autoclosure () throws -> [T], message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
 
     let expectation = XCTestExpectation()
@@ -125,7 +135,7 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 /// Asynchronously, Asserts that an expression is nil.
 ///
 /// - Parameters:
-///   - expression: An expression of boolean type.
+///   - expression: An expression of type Any? to compare against nil.
 ///   - timeout: Timeout value
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
@@ -152,7 +162,7 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 /// Asynchronously, Asserts that an expression is nil.
 ///
 /// - Parameters:
-///   - expression: An expression of boolean type.
+///   - expression: An expression of type Any? to compare against nil.
 ///   - timeout: Timeout value
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
@@ -176,10 +186,10 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
     )
 }
 
-/// Asynchronously, Asserts that an expression is nil.
+/// Asynchronously, Asserts that an expression is not nil.
 ///
 /// - Parameters:
-///   - expression: An expression of boolean type.
+///   - expression: An expression of type Any? to compare against nil.
 ///   - timeout: Timeout value
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
@@ -203,10 +213,10 @@ public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @aut
     )
 }
 
-/// Asynchronously, Asserts that an expression is nil.
+/// Asynchronously, Asserts that an expression is not nil.
 ///
 /// - Parameters:
-///   - expression: An expression of boolean type.
+///   - expression: An expression of type Any? to compare against nil.
 ///   - timeout: Timeout value
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
