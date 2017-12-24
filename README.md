@@ -13,14 +13,17 @@ github "shindyu/XCTestExtensions"
 
 # Usage
 Import `XCTestExtensions` to Unit tests files:
-```
+```swift
 import XCTestExtensions
 ```
 
+
 Use `XCTestExtensions`'s extensions in your tests.
+<img src="https://raw.githubusercontent.com/shindyu/XCTestExtensions/master/img/method_completion.png">
+
 
 For example, Applying it to [the asynchronous test of the official document of apple](https://developer.apple.com/documentation/xctest/asynchronous_tests_and_expectations/testing_asynchronous_operations_with_expectations), it can be described as follows:
-```
+```swift
     func testDownloadWebData_UsingXCTAssertEventually() {
         let url = URL(string: "https://apple.com")!
 
