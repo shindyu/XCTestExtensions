@@ -82,6 +82,20 @@ class XCTAssertEventuallyTests: XCTestCase {
         XCTAssertEqualEventually(value1, value2)
     }
 
+    func test_XCTAssertEqualEventually_optional_1() {
+        let value1: String? = "fujiyama"
+        let value2: String? = "fujiyama"
+
+        XCTAssertEqualEventually(value1, value2)
+    }
+
+    func test_XCTAssertEqualEventually_optional_2() {
+        let value1: String? = nil
+        let value2: String? = nil
+
+        XCTAssertEqualEventually(value1, value2)
+    }
+
     func test_XCTAssertEqualEventually_array() {
         let value1 = [1, 2]
         var value2 = [3, 4]
@@ -96,6 +110,13 @@ class XCTAssertEventuallyTests: XCTestCase {
     func test_XCTAssertEqualEventually_array_valueNotChange() {
         let value1 = [1, 2]
         let value2 = [1, 2]
+
+        XCTAssertEqualEventually(value1, value2)
+    }
+
+    func test_XCTAssertEqualEventually_optionalArray() {
+        let value1: [Int]? = [1, 2]
+        let value2: [Int]? = [1, 2]
 
         XCTAssertEqualEventually(value1, value2)
     }
