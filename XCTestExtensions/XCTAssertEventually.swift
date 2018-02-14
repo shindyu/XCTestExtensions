@@ -82,7 +82,7 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T, _ expression2: @escaping @autoclosure () throws -> T, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
 
     for i in 0..<Int(timeout/pollInterval) {
@@ -111,14 +111,18 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T], _ expression2: @escaping @autoclosure () throws -> [T], message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
 
     let expectation = XCTestExpectation()
 
     for i in 0..<Int(timeout/pollInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
             let (value1, value2) = (try! expression1(), try! expression2())
-            if value1 == value2 {
+            if value1 == nil && value2 == nil {
+                expectation.fulfill()
+            } else if let value1 = value1,
+                let value2 = value2,
+                value1 == value2 {
                 expectation.fulfill()
             }
         }
