@@ -84,19 +84,25 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T, _ expression2: @escaping @autoclosure () throws -> T, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    var logs: [(expression1: T, expression2: T)] = []
 
     for i in 0..<Int(timeout/pollInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
             let (value1, value2) = (try! expression1(), try! expression2())
             if value1 == value2 {
                 expectation.fulfill()
+            } else {
+                logs.append((expression1: value1, expression2: value2))
             }
         }
     }
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(try! expression1())\") is not eventually equal to (\"\(try! expression2())\") - \(message)",
+        timedOutMessage: """
+        failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)
+        \(logs.map { "\($0)" }.joined(separator: "\n"))
+        """,
         file: file,
         line: line
     )
@@ -113,19 +119,25 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    var logs: [(expression1: T?, expression2: T?)] = []
 
     for i in 0..<Int(timeout/pollInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
             let (value1, value2) = (try! expression1(), try! expression2())
             if value1 == value2 {
                 expectation.fulfill()
+            } else {
+                logs.append((expression1: value1, expression2: value2))
             }
         }
     }
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)",
+        timedOutMessage: """
+        failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)
+        \(logs.map { "\($0)" }.joined(separator: "\n"))
+        """,
         file: file,
         line: line
     )
@@ -141,8 +153,8 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-
     let expectation = XCTestExpectation()
+    var logs: [(expression1: [T]?, expression2: [T]?)] = []
 
     for i in 0..<Int(timeout/pollInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
@@ -153,13 +165,18 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
                 let value2 = value2,
                 value1 == value2 {
                 expectation.fulfill()
+            } else {
+                logs.append((expression1: value1, expression2: value2))
             }
         }
     }
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)",
+        timedOutMessage: """
+        failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)
+        \(logs.map { "\($0)" }.joined(separator: "\n"))
+        """,
         file: file,
         line: line
     )
