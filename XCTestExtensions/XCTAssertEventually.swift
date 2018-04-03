@@ -82,7 +82,7 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T, _ expression2: @escaping @autoclosure () throws -> T, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
 
     for i in 0..<Int(timeout/pollInterval) {
@@ -97,6 +97,35 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
         timedOutMessage: " failed: (\"\(try! expression1())\") is not eventually equal to (\"\(try! expression2())\") - \(message)",
+        file: file,
+        line: line
+    )
+}
+
+/// Asynchronously, Asserts that two values are equal.
+///
+/// - Parameters:
+///   - expression1: An expression of type T, where T is Equatable.
+///   - expression2: An expression of type T, where T is Equatable.
+///   - timeout: Timeout value
+///   - pollInterval: poll interval
+///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
+///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    let expectation = XCTestExpectation()
+
+    for i in 0..<Int(timeout/pollInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+            let (value1, value2) = (try! expression1(), try! expression2())
+            if value1 == value2 {
+                expectation.fulfill()
+            }
+        }
+    }
+
+    switchProcess(
+        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
+        timedOutMessage: " failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)",
         file: file,
         line: line
     )
@@ -130,7 +159,7 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(try! expression1())\") is not eventually equal to (\"\(try! expression2())\") - \(message)",
+        timedOutMessage: " failed: (\"\(String(describing: try! expression1()))\") is not eventually equal to (\"\(String(describing: try! expression2()))\") - \(message)",
         file: file,
         line: line
     )

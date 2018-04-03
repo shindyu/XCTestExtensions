@@ -10,172 +10,195 @@ import XCTest
 
 class XCTAssertEventuallyTests: XCTestCase {
     func test_XCTAssertEventually() {
-        var value = false
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value = true
+        XCTContext.runActivity(named: "default") {_ in
+            XCTAssertEventually(true)
         }
 
-        XCTAssertEventually(value)
-    }
+        XCTContext.runActivity(named: "async") {_ in
+            var value = false
 
-    func test_XCTAssertEventually_valueNotChange() {
-        XCTAssertEventually(true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value = true
+            }
+
+            XCTAssertEventually(value)
+        }
     }
 
     func test_XCTAssertTrueEventually() {
-        var value = false
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value = true
+        XCTContext.runActivity(named: "default") {_ in
+            XCTAssertTrueEventually(true)
         }
 
-        XCTAssertTrueEventually(value)
-    }
+        XCTContext.runActivity(named: "async") {_ in
+            var value = false
 
-    func test_XCTAssertTrueEventually_valueNotChange() {
-        XCTAssertTrueEventually(true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value = true
+            }
+
+            XCTAssertTrueEventually(value)
+        }
     }
 
     func test_XCTAssertFalseEventually() {
-        var value = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value = false
+        XCTContext.runActivity(named: "default") {_ in
+            XCTAssertFalseEventually(false)
         }
 
-        XCTAssertFalseEventually(value)
-    }
+        XCTContext.runActivity(named: "async") {_ in
+            var value = true
 
-    func test_XCTAssertFalseEventually_valueNotChange() {
-        XCTAssertFalseEventually(false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value = false
+            }
+
+            XCTAssertFalseEventually(value)
+        }
     }
 
     func test_XCTAssertEqualEventually() {
-        let value1 = true
-        var value2 = false
+        XCTContext.runActivity(named: "default") {_ in
+            let value1 = true
+            let value2 = true
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value2 = true
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertEqualEventually(value1, value2)
-    }
+        XCTContext.runActivity(named: "async") {_ in
+            let value1 = true
+            var value2 = false
 
-    func test_XCTAssertEqualEventually_valueNotChange() {
-        let value1 = true
-        let value2 = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value2 = true
+            }
 
-        XCTAssertEqualEventually(value1, value2)
-    }
-
-    func test_XCTAssertEqualEventually_floatingPoint() {
-        let value1 = 1.0000000000000000001
-        var value2 = 2.0
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value2 = 1.0000000000000000002
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        // Usually, you rarely care about floating point errors.
-        // So I dont implement more accurate assertion.
-        XCTAssertEqualEventually(value1, value2)
-    }
+        XCTContext.runActivity(named: "floating point") {_ in
+            let value1 = 1.0000000000000000001
+            var value2 = 2.0
 
-    func test_XCTAssertEqualEventually_optional_1() {
-        let value1: String? = "fujiyama"
-        let value2: String? = "fujiyama"
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value2 = 1.0000000000000000002
+            }
 
-        XCTAssertEqualEventually(value1, value2)
-    }
-
-    func test_XCTAssertEqualEventually_optional_2() {
-        let value1: String? = nil
-        let value2: String? = nil
-
-        XCTAssertEqualEventually(value1, value2)
-    }
-
-    func test_XCTAssertEqualEventually_array() {
-        let value1 = [1, 2]
-        var value2 = [3, 4]
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            value2 = [1, 2]
+            // Usually, you rarely care about floating point errors.
+            // So I dont implement more accurate assertion.
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertEqualEventually(value1, value2)
-    }
+        XCTContext.runActivity(named: "optional") {_ in
+            let value1: String? = "fujiyama"
+            let value2: String? = "fujiyama"
 
-    func test_XCTAssertEqualEventually_array_valueNotChange() {
-        let value1 = [1, 2]
-        let value2 = [1, 2]
-
-        XCTAssertEqualEventually(value1, value2)
-    }
-
-    func test_XCTAssertEqualEventually_optionalArray() {
-        let value1: [Int]? = [1, 2]
-        let value2: [Int]? = [1, 2]
-
-        XCTAssertEqualEventually(value1, value2)
-    }
-
-    func test_XCTAssertNilEventually_equatable() {
-        var optional: Bool? = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            optional = nil
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertNilEventually(optional)
-    }
+        XCTContext.runActivity(named: "neither") {_ in
+            let value1: String? = nil
+            let value2: String? = nil
 
-    func test_XCTAssertNilEventually_equatable_valueNotChange() {
-        let optional: Bool? = nil
-
-        XCTAssertNilEventually(optional)
-    }
-
-    func test_XCTAssertNilEventually_array() {
-        var optional: [Int]? = [1, 2, 3]
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            optional = nil
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertNilEventually(optional)
-    }
+        XCTContext.runActivity(named: "array default") {_ in
+            let value1 = [1, 2]
+            let value2 = [1, 2]
 
-    func test_XCTAssertNotNilEventually_equatble() {
-        var optional: Bool? = nil
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            optional = true
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertNotNilEventually(optional)
-    }
+        XCTContext.runActivity(named: "array async") {_ in
+            let value1 = [1, 2]
+            var value2 = [3, 4]
 
-    func test_XCTAssertNotNilEventually_equatble_valueNotChange() {
-        let optional: Bool? = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value2 = [1, 2]
+            }
 
-        XCTAssertNotNilEventually(optional)
-    }
-
-    func test_XCTAssertNotNilEventually_array() {
-        var optional: [Int]? = nil
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            optional = [1, 2, 3]
+            XCTAssertEqualEventually(value1, value2)
         }
 
-        XCTAssertNotNilEventually(optional)
+        XCTContext.runActivity(named: "optionalArray default") {_ in
+            let value1: [Int]? = [1, 2]
+            let value2: [Int]? = [1, 2]
+
+            XCTAssertEqualEventually(value1, value2)
+        }
+
+        XCTContext.runActivity(named: "optionalArray async") {_ in
+            let value1: [Int]? = [1, 2]
+            var value2: [Int]? = nil
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                value2 = [1, 2]
+            }
+
+            XCTAssertEqualEventually(value1, value2)
+        }
     }
 
-    func test_XCTAssertNotNilEventually_array_valueNotChange() {
-        let optional: [Int]? = [1, 2, 3]
+    func test_XCTAssertNilEventually() {
+        XCTContext.runActivity(named: "default") {_ in
+            let optional: Bool? = nil
 
-        XCTAssertNotNilEventually(optional)
+            XCTAssertNilEventually(optional)
+        }
+
+        XCTContext.runActivity(named: "async") {_ in
+            var optional: Bool? = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                optional = nil
+            }
+
+            XCTAssertNilEventually(optional)
+        }
+
+        XCTContext.runActivity(named: "array") {_ in
+            var optional: [Int]? = [1, 2, 3]
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                optional = nil
+            }
+
+            XCTAssertNilEventually(optional)
+        }
+    }
+
+    func test_XCTAssertNotNilEventually() {
+        XCTContext.runActivity(named: "default") {_ in
+            let optional: Bool? = true
+
+            XCTAssertNotNilEventually(optional)
+        }
+
+        XCTContext.runActivity(named: "async") {_ in
+            var optional: Bool? = nil
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                optional = true
+            }
+
+            XCTAssertNotNilEventually(optional)
+        }
+
+        XCTContext.runActivity(named: "array default") {_ in
+            let optional: [Int]? = [1, 2, 3]
+
+            XCTAssertNotNilEventually(optional)
+        }
+
+        XCTContext.runActivity(named: "array async") {_ in
+            var optional: [Int]? = nil
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                optional = [1, 2, 3]
+            }
+
+            XCTAssertNotNilEventually(optional)
+        }
     }
 }
