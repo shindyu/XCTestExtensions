@@ -30,8 +30,10 @@ public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
+
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if (try! expression()) {
                 expectation.fulfill()
             }
@@ -56,9 +58,10 @@ public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () thro
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if !(try! expression()) {
                 expectation.fulfill()
             }
@@ -84,10 +87,15 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    var value1: T?
+    var value2: T?
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
-            let (value1, value2) = (try! expression1(), try! expression2())
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
+            value1 = try! expression1()
+            value2 = try! expression2()
+//            let (value1, value2) = (try! expression1(), try! expression2())
             if value1 == value2 {
                 expectation.fulfill()
             }
@@ -96,7 +104,7 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(try! expression1())\") is not eventually equal to (\"\(try! expression2())\") - \(message)",
+        timedOutMessage: " failed: (\"\(value1)\") is not eventually equal to (\"\(value2)\") - \(message)",
         file: file,
         line: line
     )
@@ -114,10 +122,14 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
 
     let expectation = XCTestExpectation()
+    var value1: [T]?
+    var value2: [T]?
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
-            let (value1, value2) = (try! expression1(), try! expression2())
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
+            value1 = try! expression1()
+            value2 = try! expression2()
             if value1 == nil && value2 == nil {
                 expectation.fulfill()
             } else if let value1 = value1,
@@ -130,7 +142,7 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 
     switchProcess(
         by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: " failed: (\"\(try! expression1())\") is not eventually equal to (\"\(try! expression2())\") - \(message)",
+        timedOutMessage: " failed: (\"\(value1)\") is not eventually equal to (\"\(value2)\") - \(message)",
         file: file,
         line: line
     )
@@ -146,9 +158,10 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if (try! expression()) == nil {
                 expectation.fulfill()
             }
@@ -173,9 +186,10 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if (try! expression()) == nil {
                 expectation.fulfill()
             }
@@ -200,9 +214,10 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if (try! expression()) != nil {
                 expectation.fulfill()
             }
@@ -227,9 +242,10 @@ public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @aut
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation()
+    let now: DispatchTime = .now()
 
     for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pollInterval * Double(i)) {
+        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
             if (try! expression()) != nil {
                 expectation.fulfill()
             }
