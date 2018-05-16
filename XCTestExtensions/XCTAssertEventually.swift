@@ -16,8 +16,8 @@ import XCTest
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    XCTAssertTrueEventually(expression, message: message, timeout: timeout, pollInterval: pollInterval, file: file, line: line)
+public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    XCTAssertTrueEventually(expression, message: message, pollTimeout: pollTimeout, pollCount: pollCount, pollInterval: pollInterval, file: file, line: line)
 }
 
 /// Asynchronously, Asserts that an expression is true.
@@ -28,20 +28,35 @@ public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if (try! expression()) {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            if (try! expression()) == true {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
+        by: result,
         timedOutMessage: "expected true, but false until the end - \(message)",
         file: file,
         line: line
@@ -56,20 +71,35 @@ public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () thro
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if !(try! expression()) {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            if (try! expression()) == false {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
+        by: result,
         timedOutMessage: "expected false, but true until the end - \(message)",
         file: file,
         line: line
@@ -85,25 +115,39 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     var value1: T?
     var value2: T?
-    let now: DispatchTime = .now()
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
             value1 = try! expression1()
             value2 = try! expression2()
-//            let (value1, value2) = (try! expression1(), try! expression2())
             if value1 == value2 {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
+        by: result,
         timedOutMessage: " failed: (\"\(value1)\") is not eventually equal to (\"\(value2)\") - \(message)",
         file: file,
         line: line
@@ -119,33 +163,44 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-
-    let expectation = XCTestExpectation()
+public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
     var value1: [T]?
     var value2: [T]?
-    let now: DispatchTime = .now()
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
             value1 = try! expression1()
             value2 = try! expression2()
-            if value1 == nil && value2 == nil {
+            if value1 == value2 {
+                result = .completed
                 expectation.fulfill()
-            } else if let value1 = value1,
-                let value2 = value2,
-                value1 == value2 {
-                expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
+        by: result,
         timedOutMessage: " failed: (\"\(value1)\") is not eventually equal to (\"\(value2)\") - \(message)",
         file: file,
         line: line
     )
+
 }
 
 /// Asynchronously, Asserts that an expression is nil.
@@ -156,21 +211,38 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var value: T?
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if (try! expression()) == nil {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            value = try! expression()
+            if value == nil {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: "XCTAssertNilEventually failed (\"\(String(describing: try! expression()))\")  - \(message)",
+        by: result,
+        timedOutMessage: "XCTAssertNilEventually failed (\"\(value)\")  - \(message)",
         file: file,
         line: line
     )
@@ -184,21 +256,38 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var value: [T]?
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if (try! expression()) == nil {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            value = try! expression()
+            if value == nil {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: "XCTAssertNilEventually failed (\"\(String(describing: try! expression()))\")  - \(message)",
+        by: result,
+        timedOutMessage: "XCTAssertNilEventually failed (\"\(value)\")  - \(message)",
         file: file,
         line: line
     )
@@ -212,21 +301,38 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var value: T?
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if (try! expression()) != nil {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            value = try! expression()
+            if value != nil {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: "XCTAssertNotNilEventually failed - \(message)",
+        by: result,
+        timedOutMessage: "XCTAssertNotNilEventually failed (\"\(value)\")  - \(message)",
         file: file,
         line: line
     )
@@ -240,21 +346,38 @@ public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @aut
 ///   - pollInterval: poll interval
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
-public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", timeout: TimeInterval = 1.0, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    let expectation = XCTestExpectation()
-    let now: DispatchTime = .now()
+public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    var value: [T]?
+    var result: XCTWaiter.Result = .timedOut
 
-    for i in 0..<Int(timeout/pollInterval) {
-        DispatchQueue.main.asyncAfter(deadline: now + pollInterval * Double(i)) {
-            if (try! expression()) != nil {
+    for _ in 0..<pollCount {
+        let expectation = XCTestExpectation()
+        DispatchQueue.main.async() {
+            value = try! expression()
+            if value != nil {
+                result = .completed
                 expectation.fulfill()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + pollInterval) {
+                    expectation.fulfill()
+                }
             }
+        }
+        let pollResult = XCTWaiter.wait(for: [expectation], timeout: pollTimeout)
+        switch pollResult {
+        case .completed:
+            if result == .completed {
+                break
+            }
+        default:
+            result = pollResult
+            break
         }
     }
 
     switchProcess(
-        by: XCTWaiter.wait(for: [expectation], timeout: timeout),
-        timedOutMessage: "XCTAssertNotNilEventually failed - \(message)",
+        by: result,
+        timedOutMessage: "XCTAssertNilEventually failed (\"\(value)\")  - \(message)",
         file: file,
         line: line
     )
