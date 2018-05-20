@@ -12,8 +12,10 @@ import XCTest
 ///
 /// - Parameters:
 ///   - expression: An expression of boolean type.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -24,8 +26,10 @@ public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -
 ///
 /// - Parameters:
 ///   - expression: An expression of boolean type.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -67,8 +71,10 @@ public func XCTAssertTrueEventually(_ expression: @escaping @autoclosure () thro
 ///
 /// - Parameters:
 ///   - expression: An expression of boolean type.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -111,8 +117,10 @@ public func XCTAssertFalseEventually(_ expression: @escaping @autoclosure () thr
 /// - Parameters:
 ///   - expression1: An expression of type T, where T is Equatable.
 ///   - expression2: An expression of type T, where T is Equatable.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> T?, _ expression2: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -159,8 +167,10 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 /// - Parameters:
 ///   - expression1: An Array expression that has the same element type as expression2.
 ///   - expression2: An Array expression that has the same element type as expression1.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @autoclosure () throws -> [T]?, _ expression2: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -207,8 +217,10 @@ public func XCTAssertEqualEventually<T: Equatable>(_ expression1: @escaping @aut
 ///
 /// - Parameters:
 ///   - expression: An expression of type Any? to compare against nil.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -252,8 +264,10 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///
 /// - Parameters:
 ///   - expression: An expression of type Any? to compare against nil.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -297,8 +311,10 @@ public func XCTAssertNilEventually<T: Equatable>(_ expression: @escaping @autocl
 ///
 /// - Parameters:
 ///   - expression: An expression of type Any? to compare against nil.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> T?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
@@ -342,8 +358,10 @@ public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @aut
 ///
 /// - Parameters:
 ///   - expression: An expression of type Any? to compare against nil.
-///   - timeout: Timeout value
-///   - pollInterval: poll interval
+///   - message: An optional description of the failure.
+///   - pollTimeout: Timeout of Polling.
+///   - pollCount: Number of Polling.
+///   - pollInterval: Polling interval.
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertNotNilEventually<T: Equatable>(_ expression: @escaping @autoclosure () throws -> [T]?, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
