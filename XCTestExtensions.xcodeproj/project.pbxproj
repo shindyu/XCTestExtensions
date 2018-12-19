@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1791BEED21C0B826002FD379 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEC21C0B826002FD379 /* Context.swift */; };
+		1791BEEF21C0B8C0002FD379 /* ContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEE21C0B8C0002FD379 /* ContextTests.swift */; };
 		512B10ED1FECCBD60062B991 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 512B10EC1FECCBD60062B991 /* XCTest.framework */; };
 		519E3D5E1FECAFBA009DD741 /* XCTestExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 519E3D541FECAFBA009DD741 /* XCTestExtensions.framework */; };
 		519E3D651FECAFBA009DD741 /* XCTestExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 519E3D571FECAFBA009DD741 /* XCTestExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1791BEEC21C0B826002FD379 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		1791BEEE21C0B8C0002FD379 /* ContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextTests.swift; sourceTree = "<group>"; };
 		512B10EC1FECCBD60062B991 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		519E3D541FECAFBA009DD741 /* XCTestExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XCTestExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519E3D571FECAFBA009DD741 /* XCTestExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTestExtensions.h; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 				519E3D571FECAFBA009DD741 /* XCTestExtensions.h */,
 				519E3D581FECAFBA009DD741 /* Info.plist */,
 				519E3D6E1FECAFF5009DD741 /* XCTAssertEventually.swift */,
+				1791BEEC21C0B826002FD379 /* Context.swift */,
 				519E3D701FECB025009DD741 /* XCTWaiter+.swift */,
 			);
 			path = XCTestExtensions;
@@ -94,6 +99,7 @@
 			children = (
 				519E3D641FECAFBA009DD741 /* Info.plist */,
 				519E3D721FECB0AC009DD741 /* XCTAssertEventuallyTests.swift */,
+				1791BEEE21C0B8C0002FD379 /* ContextTests.swift */,
 			);
 			path = XCTestExtensionsTests;
 			sourceTree = "<group>";
@@ -163,16 +169,17 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = shindyu;
 				TargetAttributes = {
 					519E3D531FECAFBA009DD741 = {
 						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 					519E3D5C1FECAFBA009DD741 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -217,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1791BEED21C0B826002FD379 /* Context.swift in Sources */,
 				519E3D6F1FECAFF5009DD741 /* XCTAssertEventually.swift in Sources */,
 				519E3D711FECB025009DD741 /* XCTWaiter+.swift in Sources */,
 			);
@@ -227,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				519E3D731FECB0AC009DD741 /* XCTAssertEventuallyTests.swift in Sources */,
+				1791BEEF21C0B8C0002FD379 /* ContextTests.swift in Sources */,
 				519E3DA01FECBA43009DD741 /* XCTWaiter+.swift in Sources */,
 				519E3D9F1FECBA40009DD741 /* XCTAssertEventually.swift in Sources */,
 			);
@@ -257,6 +266,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -264,6 +274,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -317,6 +328,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -324,6 +336,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -378,7 +391,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -405,7 +418,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shindyu.XCTestExtensions;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -420,7 +433,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.shindyu.XCTestExtensionsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -435,7 +448,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.shindyu.XCTestExtensionsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
