@@ -4,11 +4,11 @@
 # Features
 - [x] `XCTAssertEventually` (that convenient assertions  for writing Unit Test).
 
-Use `XCTAssertEventually`, you can write asynchronous assertions very easily and intuitively, like [Nimble](https://github.com/Quick/Nimble)'s toEventually.
+  - Use "XCTAssertEventually", you can write asynchronous assertions very easily and intuitively, like [Nimble](https://github.com/Quick/Nimble)'s toEventually.
 
 - [x] `context` (It is a wrapper of XCTContext.runActivity.)
 
-`context` can internally test setup and tearDown of TestClass. Of course you can not do it.
+  - "context" can internally test setup and tearDown of TestClass. Of course you can not do it.
 
 
 # Installation
