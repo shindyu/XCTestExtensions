@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1791BEED21C0B826002FD379 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEC21C0B826002FD379 /* Context.swift */; };
-		1791BEEF21C0B8C0002FD379 /* ContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEE21C0B8C0002FD379 /* ContextTests.swift */; };
+		1791BEED21C0B826002FD379 /* XCTxContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEC21C0B826002FD379 /* XCTxContext.swift */; };
+		1791BEEF21C0B8C0002FD379 /* XCTxContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791BEEE21C0B8C0002FD379 /* XCTxContextTests.swift */; };
 		512B10ED1FECCBD60062B991 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 512B10EC1FECCBD60062B991 /* XCTest.framework */; };
 		519E3D5E1FECAFBA009DD741 /* XCTestExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 519E3D541FECAFBA009DD741 /* XCTestExtensions.framework */; };
 		519E3D651FECAFBA009DD741 /* XCTestExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 519E3D571FECAFBA009DD741 /* XCTestExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -30,8 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1791BEEC21C0B826002FD379 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
-		1791BEEE21C0B8C0002FD379 /* ContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextTests.swift; sourceTree = "<group>"; };
+		1791BEEC21C0B826002FD379 /* XCTxContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTxContext.swift; sourceTree = "<group>"; };
+		1791BEEE21C0B8C0002FD379 /* XCTxContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTxContextTests.swift; sourceTree = "<group>"; };
 		512B10EC1FECCBD60062B991 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		519E3D541FECAFBA009DD741 /* XCTestExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XCTestExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519E3D571FECAFBA009DD741 /* XCTestExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTestExtensions.h; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 				519E3D571FECAFBA009DD741 /* XCTestExtensions.h */,
 				519E3D581FECAFBA009DD741 /* Info.plist */,
 				519E3D6E1FECAFF5009DD741 /* XCTAssertEventually.swift */,
-				1791BEEC21C0B826002FD379 /* Context.swift */,
+				1791BEEC21C0B826002FD379 /* XCTxContext.swift */,
 				519E3D701FECB025009DD741 /* XCTWaiter+.swift */,
 			);
 			path = XCTestExtensions;
@@ -99,7 +99,7 @@
 			children = (
 				519E3D641FECAFBA009DD741 /* Info.plist */,
 				519E3D721FECB0AC009DD741 /* XCTAssertEventuallyTests.swift */,
-				1791BEEE21C0B8C0002FD379 /* ContextTests.swift */,
+				1791BEEE21C0B8C0002FD379 /* XCTxContextTests.swift */,
 			);
 			path = XCTestExtensionsTests;
 			sourceTree = "<group>";
@@ -224,7 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1791BEED21C0B826002FD379 /* Context.swift in Sources */,
+				1791BEED21C0B826002FD379 /* XCTxContext.swift in Sources */,
 				519E3D6F1FECAFF5009DD741 /* XCTAssertEventually.swift in Sources */,
 				519E3D711FECB025009DD741 /* XCTWaiter+.swift in Sources */,
 			);
@@ -235,7 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				519E3D731FECB0AC009DD741 /* XCTAssertEventuallyTests.swift in Sources */,
-				1791BEEF21C0B8C0002FD379 /* ContextTests.swift in Sources */,
+				1791BEEF21C0B8C0002FD379 /* XCTxContextTests.swift in Sources */,
 				519E3DA01FECBA43009DD741 /* XCTWaiter+.swift in Sources */,
 				519E3D9F1FECBA40009DD741 /* XCTAssertEventually.swift in Sources */,
 			);

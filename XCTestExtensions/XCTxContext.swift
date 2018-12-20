@@ -1,5 +1,5 @@
 //
-//  Context.swift
+//  XCTxContext.swift
 //  XCTestExtensions
 //
 //  Created by shindyu on 2018/12/12.
@@ -9,7 +9,7 @@
 import XCTest
 
 public protocol ContextExecutable {
-    func context(_ named: String, shouldSetUp: Bool, shouldTearDown: Bool, block: ()->())
+    func XCTxContext(_ named: String, shouldSetUp: Bool, shouldTearDown: Bool, block: ()->())
 }
 
 extension XCTestCase: ContextExecutable {
@@ -20,7 +20,7 @@ extension XCTestCase: ContextExecutable {
     ///   - shouldSetUp: Flag for execute setup
     ///   - shouldTearDown: Flag for execute tearDown
     ///   - block: Contents of the test to be executed
-    public func context(_ named: String, shouldSetUp: Bool = true, shouldTearDown: Bool = true, block: ()->()) {
+    public func XCTxContext(_ named: String, shouldSetUp: Bool = true, shouldTearDown: Bool = true, block: ()->()) {
         if shouldSetUp {
             self.setUp()
         }

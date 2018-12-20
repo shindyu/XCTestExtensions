@@ -33,7 +33,7 @@ class ContextTests: XCTestCase {
 
         XCTAssertEqual(contextTests_calledCount, 1)
 
-        context("test-1") {
+        XCTxContext("test-1") {
             XCTAssertEqual(contextTests_calledCount, 0)
 
             countUp()
@@ -44,7 +44,7 @@ class ContextTests: XCTestCase {
 
         XCTAssertEqual(contextTests_calledCount, 1)
 
-        context("test-1") {
+        XCTxContext("test-1") {
             XCTAssertEqual(contextTests_calledCount, 0)
             countUp()
             countUp()
@@ -62,7 +62,7 @@ class ContextTests: XCTestCase {
 
         XCTAssertEqual(contextTests_calledCount, 1)
 
-        context("test-1", shouldSetUp: false) {
+        XCTxContext("test-1", shouldSetUp: false) {
             XCTAssertEqual(contextTests_calledCount, 1)
 
             countUp()
@@ -81,7 +81,7 @@ class ContextTests: XCTestCase {
 
         XCTAssertEqual(contextTests_calledCount, 1)
 
-        context("test-1", shouldTearDown: false) {
+        XCTxContext("test-1", shouldTearDown: false) {
             XCTAssertEqual(contextTests_calledCount, 0)
 
             countUp()

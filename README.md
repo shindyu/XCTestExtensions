@@ -5,8 +5,8 @@
 - [x] `XCTAssertEventually` (that convenient assertions  for writing Unit Test).
 Use `XCTAssertEventually`, you can write asynchronous assertions very easily and intuitively, like [Nimble](https://github.com/Quick/Nimble)'s toEventually.
 
-- [x] `context` (It is a wrapper of XCTContext.runActivity.)
-`context` can internally test setup and tearDown of TestClass. Of course you can not do it.
+- [x] `XCTxContext` (It is a wrapper of XCTContext.runActivity.)
+`XCTxContext` can internally test setup and tearDown of TestClass. Of course you can not do it.
 
 
 # Installation
@@ -31,7 +31,7 @@ Use `XCTestExtensions`'s extensions in your tests:
 For example, Applying it to [the asynchronous test of the official document of apple](https://developer.apple.com/documentation/xctest/asynchronous_tests_and_expectations/testing_asynchronous_operations_with_expectations), it can be described as follows:
 ```swift
     func testDownloadWebData_UsingXCTAssertEventually() {
-        context("you can describe context") {
+        XCTxContext("you can describe context") {
             let url = URL(string: "https://apple.com")!
 
             var downloadData: Data?
