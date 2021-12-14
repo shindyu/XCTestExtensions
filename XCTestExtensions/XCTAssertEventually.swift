@@ -19,7 +19,7 @@ import XCTest
 ///   - file: The file in which failure occurred. Defaults to the file name of the test case in which this function was called
 ///   - line: The line number on which failure occurred. Defaults to the line number on which this function was called.
 public func XCTAssertEventually(_ expression: @escaping @autoclosure () throws -> Bool, message: String = "", pollTimeout: TimeInterval = 10.0, pollCount: Int = 10, pollInterval: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
-    XCTAssertTrueEventually(expression, message: message, pollTimeout: pollTimeout, pollCount: pollCount, pollInterval: pollInterval, file: file, line: line)
+    XCTAssertTrueEventually(try expression(), message: message, pollTimeout: pollTimeout, pollCount: pollCount, pollInterval: pollInterval, file: file, line: line)
 }
 
 /// Asynchronously, Asserts that an expression is true.
